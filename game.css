@@ -1,0 +1,79 @@
+body
+{
+    background-color:#2e2e2e;
+    
+}
+
+#game_body
+{
+    position: relative;
+    margin:auto;
+    background-color:#475B2C;
+    width: 668px;
+    height:668px;
+    float:center;
+}
+
+#checkers
+{
+    position: absolute;
+    margin-top:14px;
+    margin-left:14px;
+    margin-right:14px;
+    border: 0px #000 solid;
+    padding:0px
+}
+
+
+.box{
+    margin:0px;
+    height:86px;
+    width:86px;
+    margin:5px;
+    display:inline-block;
+    background-color:white;
+    padding:5px;
+    
+}
+
+#red-piece
+{
+    position:absolute;
+    margin-left:660px;
+    margin-top:410px;
+    
+}
+
+#red-label
+{
+    position:absolute;
+    margin-left:665px;
+    margin-top: 470px;
+    font: 11px arial;
+    color:#fff;
+}
+
+.blue-piece
+{
+    position:absolute;
+    margin-left:660px;
+    margin-top:500px;
+}
+
+#blue-label
+{
+    position:absolute;
+    margin-left:680px;
+    margin-top:570px;
+    font: 11px arial;
+    color:#fff;
+}
+
+#position
+{
+    position:absolute;
+    margin-left:680px;
+    margin-top:600px;
+    font: 11px arial;
+    color:#fff;
+}

@@ -1,0 +1,107 @@
+<html>
+
+    <head>
+        
+        <title>Snakes and Ladders Game</title>
+        
+        <link rel="stylesheet" type="text/css" href="game.css">
+        
+        <script type="text/javascript"  src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js">
+            
+           
+        </script>
+
+    </head>
+
+    <body>
+
+        <div id="game_body">
+            
+            <div id="checkers">
+                
+                <div id="red-piece"><img src="red-piece.png" height="60"></img></div>
+                <div id="red-label">Computer</div>
+                 <div class="blue-piece"><img src="blue-piece.png" height="60"></img></div>
+                <div id="blue-label">You</div>
+                <div id="position">Position: X=0, y=0</div>
+            </div>
+            
+            <script>
+                
+                $(document).ready(function(){
+                      var cars = ['FFAE58', 'FFDF4D', 'B2B740', '80CDC0', 'EC7E38'];
+                      var colors_above = ['0','0','0','0','0'];
+                                  
+                      //create the inner boxes
+                      var $newdiv;
+                      var prev_color=-1;
+                      for (var i = 0; i < 36; i++) {
+                          $newdiv = $('<div class="box" id="id_'+Math.abs(35-i)+'" />').text(Math.abs(35-i));
+                          $('#checkers').append($newdiv);
+                        
+                          var color_num=Math.floor(Math.random()*5);
+                          while(color_num==prev_color && i<6)
+                          {
+                             color_num=Math.floor(Math.random()*5);
+                          }
+                        
+                          //check row colors
+                          if(i>5)
+                          {
+                                  while(color_num==colors_above[(i%6)] || color_num==prev_color)
+                                  {
+                                  color_num=Math.floor(Math.random()*5);
+                                  }
+                          }
+                        
+                          colors_above[(i%6)]=color_num;
+                          prev_color=color_num;
+                          
+                          $('#id_'+Math.abs(35-i)).css('background-color',"#"+cars[color_num]);
+                          
+                      }
+                                  
+                      //Allow the blue-piece to be draggable
+                      var $blue_piece = null;
+                      
+                      $(document.body).on("mousemove", function(e) {
+                              if ($blue_piece) {
+                              $blue_piece.offset({
+                                                top: e.pageY,
+                                                left: e.pageX
+                                                
+                                                });
+                                          
+                                     
+                                          }
+            
+                              });
+                      
+                      $(document.body).on("mousedown", ".blue-piece", function (e) {
+                              $blue_piece = $(e.target);
+                              $("#position").html("X: "+($blue_piece.offset().left-$("#game_body").offset().left)+" , Y:"+$blue_piece.offset().top);
+
+                                          
+                              });
+                      
+                      $(document.body).on("mouseup", function (e) {
+                              $blue_piece = null;
+                          
+                              });
+                                  
+                    
+                                  alert($("#checkers").offset().left + " "+$("#checkers").offset().top);
+                        
+                });
+                
+                
+
+            </script>
+            
+        </div>
+        
+        
+    </body>
+
+
+</html>

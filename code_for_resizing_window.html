@@ -1,0 +1,90 @@
+<html>
+
+    <head>
+        
+        <title>Snakes and Ladders Game</title>
+        
+        <link rel="stylesheet" type="text/css" href="game.css">
+        
+        <script type="text/javascript"  src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js">
+            
+           
+        </script>
+
+    </head>
+
+    <body>
+
+        <div id="game_body">
+            
+            <div id="checkers">
+                
+
+            </div>
+            
+            <script>
+                var height = $(window).height();
+                var width = $(window).width();
+                var checkers_h=width*.9;
+                var checkers_h=height*.9;
+                $(document).ready(function(){
+                      $(window).trigger('resize');
+                                  
+                      //create the inner boxes
+                      
+                      var $newdiv;
+                      for (var i = 0; i < 10; i++) {
+                      $newdiv = $('<div class="box" />').text(i);
+                      $('#checkers').append($newdiv);
+                      }
+                      
+                      $('.box').css('height','10px');
+                      $('.box').css('width','10px');
+                });
+                
+                $(window).resize(function(){
+                  height = $(window).height();
+                  width = $(window).width();
+                  
+                      if(height>width)
+                      {
+                          width=width-20;
+                         height=width;
+                          $('#game_body').css('height', width);
+                          $('#game_body').css('width', width);
+                                 
+                        checkers_w=width*.9;
+                        $('#checkers').css('margin-top',(width-checkers_w)/2);
+                        $('#checkers').css('margin-left',(width-checkers_w)/2);
+                        $('#checkers').css('height',checkers_w);
+                        $('#checkers').css('width',checkers_w);
+                      }
+                      else
+                      {
+                          height=height-20;
+                         width=height;
+                          $('#game_body').css('height', height);
+                          $('#game_body').css('width', height);
+                                 
+                         checkers_h=height*.9;
+                         $('#checkers').css('margin-top',(height-checkers_h)/2);
+                         $('#checkers').css('margin-left',(height-checkers_h)/2);
+                         $('#checkers').css('height',checkers_h);
+                         $('#checkers').css('width',checkers_h);
+                      }
+                                 
+                                 
+                      
+                    
+                  
+                  });
+
+            </script>
+            
+        </div>
+        
+        
+    </body>
+
+
+</html>
