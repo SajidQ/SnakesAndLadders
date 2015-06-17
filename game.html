@@ -69,28 +69,27 @@
                               $blue_piece.offset({
                                                 top: e.pageY,
                                                 left: e.pageX
-                                                
                                                 });
-                                          
-                                     
                                           }
-            
-                              });
+                        });
                       
                       $(document.body).on("mousedown", ".blue-piece", function (e) {
                               $blue_piece = $(e.target);
-                              $("#position").html("X: "+($blue_piece.offset().left-$("#game_body").offset().left)+" , Y:"+$blue_piece.offset().top);
-
                                           
-                              });
+                             //debugging print out position of the blue piece
+                              $("#position").html("X: "+($blue_piece.offset().left-$("#checkers").offset().left)+" , Y:"+($blue_piece.offset().top-$("#checkers").offset().top));
+
+                              //check for collisions against boxes
+                                          
+                        });
                       
                       $(document.body).on("mouseup", function (e) {
                               $blue_piece = null;
                           
-                              });
+                        });
                                   
                     
-                                  alert($("#checkers").offset().left + " "+$("#checkers").offset().top);
+                        alert($("#checkers").offset().left + " "+$("#checkers").offset().top);
                         
                 });
                 
