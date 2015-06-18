@@ -9,17 +9,17 @@ body
     position: relative;
     margin:auto;
     background-color:#475B2C;
-    width: 668px;
-    height:668px;
+    width: 667px;
+    height:667px;
     float:center;
 }
 
 #checkers
 {
     position: absolute;
-    margin-top:14px;
-    margin-left:14px;
-    margin-right:14px;
+    margin-top:3px;
+    margin-left:3px;
+    margin-right:3px;
     border: 0px #000 solid;
     padding:0px
 }
@@ -27,9 +27,9 @@ body
 
 .box{
     margin:0px;
-    height:86px;
-    width:86px;
-    margin:5px;
+    height:52px;
+    width:52px;
+    margin:2px;
     display:inline-block;
     background-color:white;
     padding:5px;
@@ -39,7 +39,7 @@ body
 #red-piece
 {
     position:absolute;
-    margin-left:660px;
+    margin-left:680px;
     margin-top:410px;
     
 }
@@ -47,24 +47,24 @@ body
 #red-label
 {
     position:absolute;
-    margin-left:665px;
-    margin-top: 470px;
+    margin-left:680px;
+    margin-top: 460px;
     font: 11px arial;
     color:#fff;
 }
 
-.blue-piece
+#blue-piece
 {
     position:absolute;
-    margin-left:660px;
+    margin-left:680px;
     margin-top:500px;
 }
 
 #blue-label
 {
     position:absolute;
-    margin-left:680px;
-    margin-top:570px;
+    margin-left:690px;
+    margin-top:550px;
     font: 11px arial;
     color:#fff;
 }
@@ -74,6 +74,7 @@ body
     position:absolute;
     margin-left:680px;
     margin-top:600px;
+    width:100px;
     font: 11px arial;
     color:#fff;
 }

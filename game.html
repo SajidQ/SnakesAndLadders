@@ -19,9 +19,9 @@
             
             <div id="checkers">
                 
-                <div id="red-piece"><img src="red-piece.png" height="60"></img></div>
+                <div id="red-piece"><img src="red-piece.png" height="40"></img></div>
                 <div id="red-label">Computer</div>
-                 <div class="blue-piece"><img src="blue-piece.png" height="60"></img></div>
+                 <div id="blue-piece"><img src="blue-piece.png" height="40"></img></div>
                 <div id="blue-label">You</div>
                 <div id="position">Position: X=0, y=0</div>
             </div>
@@ -29,68 +29,169 @@
             <script>
                 
                 $(document).ready(function(){
-                      var cars = ['FFAE58', 'FFDF4D', 'B2B740', '80CDC0', 'EC7E38'];
-                      var colors_above = ['0','0','0','0','0'];
+                        
+                      var blue_piece_object = {
+                          top: null,
+                          left:null
+                        }
                                   
-                      //create the inner boxes
-                      var $newdiv;
-                      var prev_color=-1;
-                      for (var i = 0; i < 36; i++) {
-                          $newdiv = $('<div class="box" id="id_'+Math.abs(35-i)+'" />').text(Math.abs(35-i));
-                          $('#checkers').append($newdiv);
-                        
-                          var color_num=Math.floor(Math.random()*5);
-                          while(color_num==prev_color && i<6)
-                          {
-                             color_num=Math.floor(Math.random()*5);
-                          }
-                        
-                          //check row colors
-                          if(i>5)
-                          {
-                                  while(color_num==colors_above[(i%6)] || color_num==prev_color)
+                                  
+                      make_background();
+                      mouse_effects();
+                                  
+                    
+                      function make_background()
+                      {
+                              var colors = ['FFAE58', 'FFDF4D', 'B2B740', '80CDC0', 'EC7E38'];
+                              var colors_above = ['0','0','0','0','0','0','0','0','0','0'];
+                              var colors_used=[0,0,0,0,0];
+                              
+                              //create the inner boxes
+                              var $newdiv;
+                              var prev_color=-1;
+                              for (var i = 0; i < 100; i++) {
+                              $newdiv = $('<div class="box" id="id_'+Math.abs(99-i)+'" />').text(Math.abs(99-i));
+                              $('#checkers').append($newdiv);
+                              
+                              var color_num=Math.floor(Math.random()*5);
+                              while(color_num==prev_color && i<9)
+                              {
+                              color_num=Math.floor(Math.random()*5);
+                              }
+                              
+                              //check row colors
+                              if(i>9)
+                              {
+                                  while(color_num==colors_above[(i%10)] || color_num==prev_color || colors_used[color_num]>22)
                                   {
                                   color_num=Math.floor(Math.random()*5);
                                   }
-                          }
-                        
-                          colors_above[(i%6)]=color_num;
-                          prev_color=color_num;
-                          
-                          $('#id_'+Math.abs(35-i)).css('background-color',"#"+cars[color_num]);
-                          
+                              }
+                              
+                              colors_above[(i%10)]=color_num;
+                              prev_color=color_num;
+                              colors_used[color_num]=colors_used[color_num]+1;
+                              
+                              $('#id_'+Math.abs(99-i)).css('background-color',"#"+colors[color_num]);
+                              
+                              }
                       }
                                   
-                      //Allow the blue-piece to be draggable
-                      var $blue_piece = null;
-                      
-                      $(document.body).on("mousemove", function(e) {
+                      function mouse_effects(){
+                          //Allow the blue-piece to be draggable
+                          var $blue_piece = null;
+                          
+                          $(document.body).on("mousemove", function(e) {
                               if ($blue_piece) {
                               $blue_piece.offset({
-                                                top: e.pageY,
-                                                left: e.pageX
-                                                });
-                                          }
-                        });
-                      
-                      $(document.body).on("mousedown", ".blue-piece", function (e) {
-                              $blue_piece = $(e.target);
-                                          
-                             //debugging print out position of the blue piece
+                                                 top: e.pageY,
+                                                 left: e.pageX
+                                                 });
+                              }
+                                              
+                              blue_piece_object.left=($blue_piece.offset().left-$("#checkers").offset().left);
+                              blue_piece_object.top=($blue_piece.offset().top-$("#checkers").offset().top);
+                                              
                               $("#position").html("X: "+($blue_piece.offset().left-$("#checkers").offset().left)+" , Y:"+($blue_piece.offset().top-$("#checkers").offset().top));
-
-                              //check for collisions against boxes
-                                          
-                        });
-                      
-                      $(document.body).on("mouseup", function (e) {
-                              $blue_piece = null;
+                              
+                          });
                           
-                        });
+                          $(document.body).on("mousedown", "#blue-piece", function (e) {
+                              $blue_piece = $(e.target);
+                                              
+                              blue_piece_object.left=($blue_piece.offset().left-$("#checkers").offset().left);
+                              blue_piece_object.top=($blue_piece.offset().top-$("#checkers").offset().top);
+                                              
+                              
+                              //debugging print out position of the blue piece
+                              $("#position").html("X: "+($blue_piece.offset().left-$("#checkers").offset().left)+" , Y:"+($blue_piece.offset().top-$("#checkers").offset().top));
+                              blue_piece_object.left=($blue_piece.offset().left-$("#checkers").offset().left);
+                              blue_piece_object.top=($blue_piece.offset().top-$("#checkers").offset().top);
+                              
+                              //get the location of the blue piece
+                              var on_box=find_box($blue_piece);
+                            
+                              if(on_box!==null)
+                              {
+                              alert("On box: "+on_box);
+                              //check if the piece is a snake piece?
+                                              
+                                
+                                              
+                              //slide the blue piece to the end of the snake
+                                              
+                              var snake_end=Math.floor(Math.random()*99);
+                               
+                              alert("id_"+snake_end+": "+$("#id_"+snake_end).offset().top+" "+$("#id_"+snake_end).offset().left);
+                              
+                              var blue_top=blue_piece_object.top;
+                              var blue_left=blue_piece_object.left
+                              var snake_top=$("#id_"+snake_end).offset().top-$("#checkers").offset().top;
+                              var snake_left=$("#id_"+snake_end).offset().left-$("#checkers").offset().left;
                                   
-                    
-                        alert($("#checkers").offset().left + " "+$("#checkers").offset().top);
-                        
+                              var differce_left=snake_left-blue_left;
+                              var differce_top=snake_top-blue_top;
+                              alert("id_"+snake_end+": "+blue_top+" "+blue_left+" "+snake_top+" "+snake_left);
+                              alert("id_"+snake_end+": "+differce_top+" "+differce_left);
+                                              
+                                $("#blue-piece").animate({
+                                    left:'+='+differce_left+'px',
+                                    top:'+='+differce_top+'px'
+                                    }, "slow");
+                                              
+                              //check if stairs
+                                              
+                              //slide piece up
+                              }
+                                              
+                              
+                              
+                          });
+                          
+                          $(document.body).on("mouseup", function (e) {
+                              $blue_piece = null;
+                              
+                          });
+
+                      }
+                                  
+                      function find_box($blue_piece)
+                      {
+                          var return_val=null;
+                          var extra_space=4;
+                                  
+                          //iterate through all the div boxes
+                          $("div.box").each(function(index,value)
+                            {
+                                //$("#position").html("...X: "+($blue_piece.offset().left-$("#checkers").offset().left)+" , Y:"+($blue_piece.offset().top-$("#checkers").offset().top)+"\n id:"+value.id + " "+value.offsetLeft);
+                                //alert(index+ " "+value.id+" "+value.offsetLeft+" "+value.offsetWidth);
+                                
+                                
+                                var boxL=value.offsetLeft;
+                                var boxT=value.offsetTop;//-$("#checkers").offset().top;
+                                var boxWidth=value.offsetWidth;
+                                var pieceL=($blue_piece.offset().left-$("#checkers").offset().left);
+                                var pieceT=($blue_piece.offset().top-$("#checkers").offset().top);
+                                
+                                //alert(pieceL+">"+boxL+" && "+(pieceL+$blue_piece.width())+"<("+boxL+"+"+boxWidth+")");
+                                //alert(value.id+": "+boxT+"<"+pieceT+" && "+(boxT+boxWidth)+">="+(pieceT+$blue_piece.width()));
+                                            
+                                if(pieceL>(boxL-extra_space) && (pieceL+$blue_piece.width())<=(boxL+boxWidth+extra_space))
+                                    {
+                                    if((boxT-extra_space)<pieceT && (boxT+boxWidth+extra_space)>=(pieceT+$blue_piece.width()))
+                                    {
+                                        //alert(value.id+": Collision");
+                                        return_val=value.id;
+                                    }
+                                }
+                            
+                            
+                            
+                            });
+                                  
+                          return return_val;
+                      }
+                                
                 });
                 
                 
