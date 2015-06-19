@@ -19,9 +19,18 @@
             
             <div id="checkers">
                 
+                <div id="snake_and_ladder"><img src="snake_ladder1.png" height="490" ></div>
+                <div id="snake1"><img src="snake1.png" height="160" ></div>
+                <div id="snake2"><img src="snake2.png" height="70" ></div>
+                <div id="ladder1"><img src="ladder1.png" height="170" ></div>
+                <div id="ladder2"><img src="ladder2.png" height="130" ></div>
+                <div id="ladder3"><img src="ladder3.png" height="180" ></div>
+                <div id="ladder4"><img src="ladder4.png" height="110" ></div>
+                
                 <div id="red-piece"><img src="red-piece.png" height="40"></img></div>
+                
                 <div id="red-label">Computer</div>
-                 <div id="blue-piece"><img src="blue-piece.png" height="40"></img></div>
+                <div id="blue-piece"><img src="blue-piece.png" height="40"></img></div>
                 <div id="blue-label">You</div>
                 <div id="position">Position: X=0, y=0</div>
             </div>
@@ -42,39 +51,49 @@
                     
                       function make_background()
                       {
-                              var colors = ['FFAE58', 'FFDF4D', 'B2B740', '80CDC0', 'EC7E38'];
+                              var colors = ['be5553', 'bad6a5', 'e8b13b', '80CDC0', 'f2edbd'];
                               var colors_above = ['0','0','0','0','0','0','0','0','0','0'];
                               var colors_used=[0,0,0,0,0];
+                              var color_num=0;
                               
                               //create the inner boxes
+                              
+                              //loop thorough all the boxes
                               var $newdiv;
-                              var prev_color=-1;
+                                  
                               for (var i = 0; i < 100; i++) {
-                              $newdiv = $('<div class="box" id="id_'+Math.abs(99-i)+'" />').text(Math.abs(99-i));
-                              $('#checkers').append($newdiv);
-                              
-                              var color_num=Math.floor(Math.random()*5);
-                              while(color_num==prev_color && i<9)
-                              {
-                              color_num=Math.floor(Math.random()*5);
-                              }
-                              
-                              //check row colors
-                              if(i>9)
-                              {
-                                  while(color_num==colors_above[(i%10)] || color_num==prev_color || colors_used[color_num]>22)
+                                  
+                                  //create a box class div and attach it to the checkers board
+                                  $newdiv = $('<div class="box" id="id_'+Math.abs(99-i)+'" />').text(Math.abs(99-i));
+                                      
+                                  $('#checkers').append($newdiv);
+                                  
+                                  $('#id_'+Math.abs(99-i)).css('background-color',"#"+colors[color_num]);
+                                  
+                                  //update color_num; mod if over 5
+                                  color_num++;
+                                  if(color_num>4)
+                                      color_num=color_num%5;
+                                  
+                                  //if finished with one row; move the colors
+                                  if((i+1)%10==0)
                                   {
-                                  color_num=Math.floor(Math.random()*5);
+                                      var first_col=colors[0];
+                                      var second_col=colors[1];
+                                  
+                                      for(var j=0; j<3; j++)
+								      {
+									  colors[j]=colors[(j+2)];
+                                      }
+								  
+								  colors[3]=first_col;
+								  colors[4]=second_col;
                                   }
+                                  
+                                  
                               }
-                              
-                              colors_above[(i%10)]=color_num;
-                              prev_color=color_num;
-                              colors_used[color_num]=colors_used[color_num]+1;
-                              
-                              $('#id_'+Math.abs(99-i)).css('background-color',"#"+colors[color_num]);
-                              
-                              }
+                                  
+                            
                       }
                                   
                       function mouse_effects(){

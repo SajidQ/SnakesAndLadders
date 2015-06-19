@@ -78,3 +78,58 @@ body
     font: 11px arial;
     color:#fff;
 }
+
+
+
+#snake_and_ladder
+{
+    position:absolute;
+    margin-left:105px;
+    margin-top:70px;
+    
+}
+
+#snake1
+{
+    position:absolute;
+    margin-left:40px;
+    margin-top:20px;
+}
+
+#snake2
+{
+    position:absolute;
+    margin-left:210px;
+    margin-top:530px;
+}
+
+#ladder1
+{
+    position:absolute;
+    margin-left:80px;
+    margin-top:220px;
+}
+
+#ladder2
+{
+    position:absolute;
+    margin-left:410px;
+    margin-top:30px;
+}
+
+#ladder3
+{
+    position:absolute;
+    margin-left:30px;
+    margin-top:470px;
+}
+
+#ladder4
+{
+    position:absolute;
+    margin-left:595px;
+    margin-top:345px;
+}
+
+
+
