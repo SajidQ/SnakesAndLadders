@@ -51,14 +51,21 @@
 					  var snakes=[{start:'id_97',end:79}, {start:'id_81', end:18}, {start:'id_16', end:11}, {start:'id_76', end:46}];
 					  var ladders=[{start:'id_6',end:29}, {start:'id_49', end:68}, {start:'id_21', end:86}, {start:'id_73', end:92}, {start:'id_30', end:40}];
 						
+					  var game_started=0; //// 0=game hasn't started; 1=game started
+					  var whos_turn=1; //// 1=blue_piece; 0=computer
+					  var blue_turn_text="It's your turn. Click to roll the dice!";
+					  var computer_turn_text="It's the computer's turn";
+					  var computer_location=0;
+					  var blue_location=0;
 								  
 						
 					  //set up background
                       make_background();
 								  
+					 
 						
-								  
-					  //mouse effects
+					  ////////////////////////////////////////
+					  // Mouse effects ///////////////////////////////
 					  var $blue_piece = null;
 					  
 					  $(document.body).on("mousemove", function(e) {
@@ -70,56 +77,52 @@
 						  }
 						  
 						  blue_piece_object.left=($blue_piece.offset().left);
-						  blue_piece_object.top=($blue_piece.offset().top-$("#checkers").offset().top);
+						  blue_piece_object.top=($blue_piece.offset().top);
 						  
 						  $("#position").html("X: "+($blue_piece.offset().left-$("#checkers").offset().left)+" , Y:"+($blue_piece.offset().top-$("#checkers").offset().top));
 					  
 					  });
 					  
 					  $(document.body).on("mousedown", "#blue-piece", function (e) {
-						  $blue_piece = $(e.target);
-						  
-						  blue_piece_object.left=($blue_piece.offset().left-$("#checkers").offset().left);
-						  blue_piece_object.top=($blue_piece.offset().top-$("#checkers").offset().top);
-						  
-						  
-						  //debugging print out position of the blue piece
-						  $("#position").html("X: "+($blue_piece.offset().left-$("#checkers").offset().left)+" , Y:"+($blue_piece.offset().top-$("#checkers").offset().top));
-						 
-						  
-						  //get the location of the blue piece
-						  var on_box=find_box($blue_piece);
-						  
-						  if(on_box!==null)
+						  if(whos_turn==1)
 						  {
-						  alert("On box: "+on_box);
-										  
-						  check_for_ladders_snakes(on_box,blue_piece_object, ladders,snakes);
-							
+							  $blue_piece = $(e.target);
+							  
+							  blue_piece_object.left=($blue_piece.offset().left-$("#checkers").offset().left);
+							  blue_piece_object.top=($blue_piece.offset().top-$("#checkers").offset().top);
+							  
+							  
+							  //debugging print out position of the blue piece
+							  $("#position").html("X: "+($blue_piece.offset().left-$("#checkers").offset().left)+" , Y:"+($blue_piece.offset().top-$("#checkers").offset().top));
+							 
+							  
+							  //get the location of the blue piece
+							  var on_box=find_box($blue_piece);
+							  
+							  
+							  if(on_box!==null)
+							  {
+							  alert("On box: "+on_box);
+											  
+							  check_for_ladders_snakes(on_box,blue_piece_object, ladders,snakes);
+								
+							  }
 						  }
-					  
 					  });
 					  
 					  $(document.body).on("mouseup", function (e) {
 						  $blue_piece = null;
+						  whos_turn=0;
+										  
+						  move_computer();
 					  });
 
 					  $(document.body).on("click", "#dice_img", function (e)
 					  {
-						j=Math.floor(Math.random()*6)+1;
-						var time_out;
-						var intv=window.setInterval(function(){
-								$('#dice_img').attr('src','images/side'+j+'.png');
-								j++; //increment data array id
-								j=Math.floor(Math.random()*6)+1; //repeat from start
-											   
-								time_out=window.setTimeout(function(){
-										  window.clearInterval(intv);
-								  }, 10000);
-										
-							},300);
+						  var dice_results;
+						  dice_results=dice_roll();
 										  
-						  window.clearTimeout(time_out);
+						  //$("#position").html(dice_results);
 					  });
 								  
 				 });
@@ -263,7 +266,47 @@
 					  }
 				  }
 			
+			      function move_computer()
+				  {
+					  //roll dice
+					  
+					  //move to location
+					  
+					  //check for slides
+					  
+					  whos_turn=1;
+				  }
 			
+			      function start_game()
+				  {
+					  $("turn").html();
+				  }
+			
+				function dice_roll(){
+					var return_val=1;
+					
+					j=Math.floor(Math.random()*6)+1;
+					var time_out;
+					var intv=window.setInterval(function(){
+						$('#dice_img').attr('src','images/side'+j+'.png');
+						
+						
+						time_out=window.setTimeout(function(){
+							window.clearInterval(intv);
+						    return_val=j;
+							$("#position").html(return_val);
+							j++; //increment data array id
+							j=Math.floor(Math.random()*6)+1; //repeat from start
+												   
+						}, 10000);
+											
+					
+					},300);
+					
+					//$("#position").html(return_val);
+					window.clearTimeout(time_out);
+					return return_val;
+				}
 
             </script>
             
