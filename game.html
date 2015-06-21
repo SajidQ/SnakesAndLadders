@@ -130,11 +130,13 @@
 										
 										$("#position").html("ON: "+main_vars["blue_location"]+" "+main_vars["allow_move"]);
 										  
-										  computers_turn
+										  computers_turn(main_vars);
+										  
+										  $("#turn").html("It's the computer's turn.");
 									}
 									else
 									{
-										$("#position").html("NOT: "+main_vars["blue_location"]+" "+main_vars["allow_move"]);
+										$("#position").html("NOT: "+on_box+" "+main_vars["blue_location"]+" "+main_vars["allow_move"]);
 									}
 							  }
 						  }
@@ -246,27 +248,27 @@
 							  alert("on snake:" +snakes[i].start);
 							  
 							  
-									//slide down
-									var snake_end=snakes[i].end;
-									new_location=snake_end;
-									ladder_or_snake=1;
-									
-									alert("id_"+snake_end+": "+$("#id_"+snake_end).offset().top+" "+$("#id_"+snake_end).offset().left);
-									
-									var blue_top=blue_piece_object.top;
-									var blue_left=blue_piece_object.left
-									var snake_top=$("#id_"+snake_end).offset().top-$("#checkers").offset().top;
-									var snake_left=$("#id_"+snake_end).offset().left-$("#checkers").offset().left;
-									
-									var differce_left=snake_left-blue_left;
-									var differce_top=snake_top-blue_top;
-									alert("id_"+snake_end+": "+blue_top+" "+blue_left+" "+snake_top+" "+snake_left);
-									alert("id_"+snake_end+": "+differce_top+" "+differce_left);
-									
-									$("#blue-piece").animate({
-									 left:'+='+differce_left+'px',
-									 top:'+='+differce_top+'px'
-									 }, "slow");
+								//slide down
+								var snake_end=snakes[i].end;
+								new_location=snake_end;
+								ladder_or_snake=1;
+								
+								alert("id_"+snake_end+": "+$("#id_"+snake_end).offset().top+" "+$("#id_"+snake_end).offset().left);
+								
+								var blue_top=blue_piece_object.top;
+								var blue_left=blue_piece_object.left
+								var snake_top=$("#id_"+snake_end).offset().top-$("#checkers").offset().top;
+								var snake_left=$("#id_"+snake_end).offset().left-$("#checkers").offset().left;
+								
+								var differce_left=snake_left-blue_left;
+								var differce_top=snake_top-blue_top;
+								alert("id_"+snake_end+": "+blue_top+" "+blue_left+" "+snake_top+" "+snake_left);
+								alert("id_"+snake_end+": "+differce_top+" "+differce_left);
+								
+								$("#blue-piece").animate({
+								 left:'+='+differce_left+'px',
+								 top:'+='+differce_top+'px'
+								 }, "slow");
 						  }
 						  
 					  }
@@ -310,6 +312,9 @@
 			
 			
 			      function dice_roll(main_vars){
+						if(main_vars["whos_turn"]==1)
+						   allow_move=1;
+
 						j=Math.floor(Math.random()*6)+1;
 						var time_out;
 						var start=new Date().getTime();
@@ -371,15 +376,38 @@
 			    function computers_turn(main_vars)
 				{
 					dice_roll(main_vars);
+					move_computer(main_vars);
 				}
 			
 			    function move_computer(main_vars)
 				{
+					//slide down
+					var end_location=main_vars["dice_results"];
+					new_location=end_location;
+					ladder_or_snake=1;
 					
+					alert("id_"+end_location+": "+$("#id_"+end_location).offset().top+" "+$("#id_"+end_location).offset().left);
+					
+					var blue_top=$("#red-piece").offset().top;
+					var blue_left=$("#red-piece").offset().left
+					var new_loc_top=$("#id_"+end_location).offset().top-$("#checkers").offset().top;
+					var new_loc_left=$("#id_"+end_location).offset().left-$("#checkers").offset().left;
+					
+					var differce_left=new_loc_left-blue_left;
+					var differce_top=new_loc_top-blue_top;
+					alert("id_"+end_location+": "+blue_top+" "+blue_left+" "+new_loc_top+" "+new_loc_left);
+					alert("id_"+end_location+": "+differce_top+" "+differce_left);
+					
+					$("#red-piece").animate({
+						 left:'+='+differce_left+'px',
+						 top:'+='+differce_top+'px'
+					 }, "slow");
+					 
+					 main_vars["whos_turn"]=1;
 				}
 
             </script>
-            
+			
         </div>
         
         
