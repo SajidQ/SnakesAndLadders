@@ -84,7 +84,7 @@ body
 	position:absolute;
 	margin-left:680px;
 	margin-top:610px;
-	width:100px;
+	width:200px;
 	font: 11px arial;
 	color:#fff;
 }
@@ -94,7 +94,17 @@ body
 	position:absolute;
 	margin-left:680px;
 	margin-top:620px;
-	width:100px;
+	width:200px;
+	font: 11px arial;
+	color:#fff;
+}
+
+#computer
+{
+	position:absolute;
+	margin-left:680px;
+	margin-top:640px;
+	width:200px;
 	font: 11px arial;
 	color:#fff;
 }
