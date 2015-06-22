@@ -73,12 +73,31 @@ body
 {
     position:absolute;
     margin-left:680px;
-    margin-top:600px;
+    margin-top:580px;
     width:100px;
     font: 11px arial;
     color:#fff;
 }
 
+#on_box
+{
+	position:absolute;
+	margin-left:680px;
+	margin-top:610px;
+	width:100px;
+	font: 11px arial;
+	color:#fff;
+}
+
+#in_function
+{
+	position:absolute;
+	margin-left:680px;
+	margin-top:620px;
+	width:100px;
+	font: 11px arial;
+	color:#fff;
+}
 
 
 #snake_and_ladder
