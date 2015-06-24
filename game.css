@@ -186,3 +186,12 @@ body
 	width:100px;
 }
 
+#snake_ladder{
+	position:absolute;
+	margin-left:680px;
+	margin-top:20px;
+	font: 14px arial;
+	color:red;
+	width:100px;
+}
+

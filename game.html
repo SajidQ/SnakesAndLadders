@@ -39,6 +39,7 @@
 				<div id="computer">Function: --</div>
 				<div id="dice"><img id="dice_img" src="images/side1.png" height="60"></div>
 				<div id="turn">It's your turn. Click to roll the dice!</div>
+				<div id="snake_ladder"></div>
             </div>
             
             <script>
@@ -59,7 +60,7 @@
 					  }
 								  
 					  var snakes=[{start:'id_98',end:80}, {start:'id_82', end:19}, {start:'id_17', end:12}, {start:'id_77', end:47}];
-					  var ladders=[{start:'id_7',end:20}, {start:'id_50', end:69}, {start:'id_22', end:87}, {start:'id_74', end:93}, {start:'id_31', end:41}];
+					  var ladders=[{start:'id_7',end:30}, {start:'id_50', end:69}, {start:'id_22', end:87}, {start:'id_74', end:93}, {start:'id_31', end:41}];
 						
 						
 					  var main_vars=[];
@@ -71,7 +72,7 @@
 					  main_vars["blue_location"]=-1;
 					  main_vars["dice_results"]=0;
 					  main_vars["allow_move"]=0;
-								  
+					  main_vars["dice_rolled"]=0;
 								  
 					  //set up background
                       make_background();
@@ -105,143 +106,95 @@
 					  $(document.body).on("mousedown", "#blue-piece", function (e) {
 										  
 						  $("#in_function").html("mousedown");
-										  
+							
+							
 						  if(main_vars["allow_move"]==1)
 						  {
+							
 							  $blue_piece = $(e.target);
-							  //blue_piece_object.left=($blue_piece.offset().left-$("#checkers").offset().left);
-							  //blue_piece_object.top=($blue_piece.offset().top-$("#checkers").offset().top);
-							  //blue_piece_object.width=$blue_piece.width();
 										  
 							  update_blue_location($blue_piece, blue_piece_object);
 											  
 							  //debugging print out position of the blue piece
 							  $("#position").html("X:"+($blue_piece.offset().left-$("#checkers").offset().left)+" , Y:"+($blue_piece.offset().top-$("#checkers").offset().top)+ ", L:"+main_vars["blue_location"]);
-											  
-							  /*
-							  if(main_vars["whos_turn"]==1 && main_vars["allow_move"]==1)
-							  {
-								  $blue_piece = $(e.target);
-								  
-								  blue_piece_object.left=($blue_piece.offset().left-$("#checkers").offset().left);
-								  blue_piece_object.top=($blue_piece.offset().top-$("#checkers").offset().top);
-								  blue_piece_object.width=$blue_piece.width();
-								  
-								  //debugging print out position of the blue piece
-								  $("#position").html("X: "+($blue_piece.offset().left-$("#checkers").offset().left)+" , Y:"+($blue_piece.offset().top-$("#checkers").offset().top));
-								 
-							  }
-							  else
-								  $("#position").html("allow_move: "+main_vars["allow_move"]+" blue: "+main_vars["blue_location"]);
-							   
-							   */
+										  
+						
 						  }
 						  else
 							$("#in_function").html("mousedown: Not your turn.");
+						 
+						 
 							
 					  });
 					  
 					  $(document.body).on("mouseup", function (e) {
 						  $("#in_function").html("mouseup");
-										  
+							
+							
 						  if(main_vars["allow_move"]==1)
 						  {
-							  //blue_piece_object.left=($blue_piece.offset().left-$("#checkers").offset().left);
-							  //blue_piece_object.top=($blue_piece.offset().top-$("#checkers").offset().top);
-							  //blue_piece_object.width=$blue_piece.width();
-											  
+							 
 							  update_blue_location($blue_piece, blue_piece_object);
 									
-							  //on_box=find_box($blue_piece);
 							  var on_box=find_box(blue_piece_object);
 										
 							
 							  var found_ladder=-1;
 							  if(on_box==("id_"+main_vars["blue_location"]))
+							  {
+								  $blue_piece = null;
 							      found_ladder=check_for_ladders_snakes(on_box,blue_piece_object, ladders,snakes,main_vars, "#blue-piece", "blue_location");
+							  }
 							  else
-							      alert("Move to your correct spot!");
+								 alert("Move to your correct spot: " + "id_"+main_vars["blue_location"]);
 						  
 							  if(found_ladder!==-1)
 							  {
-								  update_blue_location($blue_piece, blue_piece_object);
-								  on_box=find_box(blue_piece_object);
+								  //update_blue_location($blue_piece, blue_piece_object);
+								  //on_box=find_box(blue_piece_object);
+								  var temp="id_"+found_ladder;
+								  found_ladder=temp;
 							  }
-										  
-							  if(on_box==("id_"+main_vars["blue_location"]))
+							  else
+								  found_ladder=on_box;
+							  
+							  if(found_ladder==("id_"+main_vars["blue_location"]))
 							  {
+								 $blue_piece = null;
+										  
 								 //debugging comment
 								 $("#on_box").html("Box: "+on_box+ " on location!");
 								 
+								 var winner=found_winner(main_vars);
+								 if(winner==0)
+								 {
 								 //change turns
 								 main_vars["allow_move"]=0;
 							     main_vars["whos_turn"]=0;
 								 $("#turn").html("It's the computer's turn.");
-								  computers_turn(main_vars, red_piece_object, ladders, snakes);
+								 computers_turn(main_vars, red_piece_object, ladders, snakes);
+								 }
 								 
-								 $blue_piece = null;
 							  }
-							  else
-							     alert("Move to your correct spot!");
+							  //else
+							    // alert("Move to your correct spot: "+found_ladder);
 						  }
 						  else
 							  $blue_piece = null;
 										
 						  $("#position").html("X:"+(blue_piece_object.left)+" , Y:"+(blue_piece_object.top)+ ", L:"+main_vars["blue_location"]);
-										  
-						  
-						  
-						  /*
-						  if(main_vars["whos_turn"]==1 && main_vars["allow_move"]==1 && $blue_piece!==null)
-						  {
-							  blue_piece_object.left=($blue_piece.offset().left-$("#checkers").offset().left);
-							  blue_piece_object.top=($blue_piece.offset().top-$("#checkers").offset().top);
-							  blue_piece_object.width=$blue_piece.width();
-										
-										  
-							  //get the location of the blue piece
-							  var on_box=find_box(blue_piece_object);//$blue_piece);
-										  
-							  //debugging print out position of the blue piece
-							  $("#position").html("X: "+($blue_piece.offset().left-$("#checkers").offset().left)+" , Y:"+($blue_piece.offset().top-$("#checkers").offset().top) + " On: " +on_box);
-							  
-							  if(on_box!==null)
-							  {
-								  check_for_ladders_snakes(on_box,blue_piece_object, ladders,snakes,main_vars);
-								  
-								  on_box=find_box($blue_piece);
-										  
-								  $("#on_box").html(on_box);
-									
-										  
-								  //if the robot is on its correct location; change the player
-								  if(on_box==("id_"+main_vars["blue_location"]))
-								  {
-									  main_vars["whos_turn"]=0;
-									  
-						   
-									  
-									  $("#position").html("ON: "+main_vars["blue_location"]+" "+main_vars["allow_move"]);
-									
-									  $("#turn").html("It's the computer's turn.");
-										  //computers_turn(main_vars);
-								  }
-								  else
-								  {
-									  $("#position").html("NOT: "+on_box+" "+main_vars["blue_location"]+" "+main_vars["allow_move"]);
-								  }
-							  }
-							  
-						  }
-						   */
-						
 						  
 					  });
 
 					  $(document.body).on("click", "#dice_img", function (e)
 					  {
-							 $("#in_function").html("dice_click");
-						  dice_roll(main_vars);
+						$("#in_function").html("dice_click");
+						 
+						if(main_vars["whos_turn"]==1 && main_vars["dice_rolled"]==0)
+						  {
+							dice_roll(main_vars);
+							main_vars["dice_rolled"]=1;
+						  }
 						  
 					  });
 								  
@@ -292,40 +245,6 @@
 				  }
 							  
 
-				  /*
-				  function find_box($blue_piece)
-				  {
-					  $("#in_function").html("find_box");
-					  var return_val=null;
-					  var extra_space=4;
-							  
-					  //iterate through all the div boxes
-					  $("div.box").each(function(index,value)
-						{
-							
-							var boxL=value.offsetLeft;
-							var boxT=value.offsetTop;//-$("#checkers").offset().top;
-							var boxWidth=value.offsetWidth;
-							var pieceL=($blue_piece.offset().left-$("#checkers").offset().left);
-							var pieceT=($blue_piece.offset().top-$("#checkers").offset().top);
-							//var pieceL=(blue_piece_object.left-$("#checkers").offset().left);
-							//var pieceT=(blue_piece_object.top-$("#checkers").offset().top);
-									
-							if(pieceL>(boxL-extra_space) && (pieceL+$blue_piece.width())<=(boxL+boxWidth+extra_space))
-								{
-								if((boxT-extra_space)<pieceT && (boxT+boxWidth+extra_space)>=(pieceT+$blue_piece.width()))
-								{
-									alert(value.id+": Collision");
-									return_val=value.id;
-								}
-							}
-						});
-						
-					  if(return_val==null)
-						  alert("find_box: error, box is null");
-					  
-					  return return_val;
-				  }*/
 			
 				function find_box(blue_piece_object)
 				{
@@ -357,8 +276,8 @@
 						  }
 					  });
 					  
-					  if(return_val==null)
-						  alert("Move to your correct spot!");
+					  //if(return_val==null)
+						//  alert("Move to your correct spot!");
 					  
 					  return return_val;
 				}
@@ -366,35 +285,20 @@
 				  function check_for_ladders_snakes(on_box,piece_object, ladders, snakes, main_vars, piece_text, update_text)
 				  {
 					  $("#in_function").html("check_for_ladders_snakes");
+					  
+					  //alert("function check_ladders");
 					  //var new_location=0;
 					  var the_end_location=-1;
-					  var ladder_or_snake=0;
+			
 					  for(var i=0;i<snakes.length; i++)
 					  {
 						  if(on_box==snakes[i].start)
 						  {
-							  alert("on snake:" +snakes[i].start);
-							  
-								//slide down
-								var snake_end=snakes[i].end;
-								the_end_location=snake_end;
-								
-								//alert("id_"+snake_end+": "+$("#id_"+snake_end).offset().top+" "+$("#id_"+snake_end).offset().left);
-								/*
-								var blue_top=blue_piece_object.top;
-								var blue_left=blue_piece_object.left
-								var snake_top=$("#id_"+snake_end).offset().top-$("#checkers").offset().top;
-								var snake_left=$("#id_"+snake_end).offset().left-$("#checkers").offset().left;
-								
-								var differce_left=snake_left-blue_left;
-								var differce_top=snake_top-blue_top;
-								//alert("id_"+snake_end+": "+blue_top+" "+blue_left+" "+snake_top+" "+snake_left);
-								//alert("id_"+snake_end+": "+differce_top+" "+differce_left);
-								
-								$("#blue-piece").animate({
-								 left:'+='+differce_left+'px',
-								 top:'+='+differce_top+'px'
-								 }, "slow");*/
+							  //alert("on snake:" +snakes[i].start);
+							  $("#snake_ladder").html("Boo! Found a snake!");
+							//slide down
+							the_end_location=snakes[i].end;
+							
 						  }
 						  
 					  }
@@ -403,28 +307,10 @@
 					  {
 						  if(on_box==ladders[i].start)
 						  {
-							  alert("On stair:" +ladders[i].start);
+							  $("#snake_ladder").html("Woo-hoo! Found a ladder!");
 							  
 							  //slide down
-							  var stair_end=ladders[i].end;
-							  the_end_location=stair_end;
-							  
-							  //alert("id_"+stair_end+": "+$("#id_"+stair_end).offset().top+" "+$("#id_"+stair_end).offset().left);
-							  /*
-							  var blue_top=blue_piece_object.top;
-							  var blue_left=blue_piece_object.left
-							  var stair_top=$("#id_"+stair_end).offset().top-$("#checkers").offset().top;
-							  var stair_left=$("#id_"+stair_end).offset().left-$("#checkers").offset().left;
-							  
-							  var differce_left=stair_left-blue_left;
-							  var differce_top=stair_top-blue_top;
-							  //alert("id_"+stair_end+": "+blue_top+" "+blue_left+" "+stair_top+" "+stair_left);
-							  //alert("id_"+stair_end+": "+differce_top+" "+differce_left);
-							  
-							  $("#blue-piece").animate({
-								   left:'+='+differce_left+'px',
-								   top:'+='+differce_top+'px'
-							   }, "slow");*/
+							  the_end_location=ladders[i].end;
 						  }
 					  }
 					  
@@ -432,14 +318,12 @@
 					  if(the_end_location!==-1)
 					  {
 						  var piece_top=piece_object.top;
-						  var piece_left=piece_object.left
+						  var piece_left=piece_object.left;
 						  var box_top=$("#id_"+the_end_location).offset().top-$("#checkers").offset().top;
 						  var box_left=$("#id_"+the_end_location).offset().left-$("#checkers").offset().left;
 						  
 						  var differce_left=box_left-piece_left;
 						  var differce_top=box_top-piece_top;
-						  //alert("id_"+stair_end+": "+blue_top+" "+blue_left+" "+stair_top+" "+stair_left);
-						  //alert("id_"+stair_end+": "+differce_top+" "+differce_left);
 						  
 						  $(piece_text).animate({
 							   left:'+='+differce_left+'px',
@@ -460,7 +344,10 @@
 			
 			      function dice_roll(main_vars, red_piece_object, ladders, snakes){
 					    $("#in_function").html("dice_roll");
+						$("#snake_ladder").html("");
 						
+						
+					
 						j=Math.floor(Math.random()*6)+1;
 						var time_out;
 						var start=new Date().getTime();
@@ -468,22 +355,7 @@
 							$('#dice_img').attr('src','images/side'+j+'.png');
 							
 							main_vars["dice_results"]=j;
-								/*
-							time_out=window.setTimeout(function(){
-								window.clearInterval(intv);
-								window.clearTimeout(time_out);
-													   
-								//$("#position").html("dice_roll: "+main_vars["dice_results"]);
-								main_vars["allow_move"]=1;
-													   
-								if(main_vars["whos_turn"]==1)
-									blue_pieces_turn(main_vars);
-							    else
-								    computers_turn(main_vars);
-			   
-							}, 10000);
-								
-							*/
+							
 							//get time
 							var curr=new Date().getTime();
 							if((curr-start)>10000)
@@ -493,7 +365,7 @@
 								if(main_vars["whos_turn"]==1)
 									blue_pieces_turn(main_vars);
 								else if(main_vars["whos_turn"]==0)
-								    move_computer(main_vars, red_piece_object, ladders, snakes);
+									move_computer(main_vars, red_piece_object, ladders, snakes);
 								 
 							}
 													
@@ -501,7 +373,7 @@
 							j=Math.floor(Math.random()*6)+1; //repeat from start
 						
 						},500);
-						
+							
 						
 				}
 			
@@ -511,6 +383,11 @@
 					
 					//update turn sign
 					$("#turn").html("Move your piece "+main_vars["dice_results"]+" spots.");
+					
+					if(main_vars["dice_results"]>=(100-main_vars["blue_location"]))
+					{
+						main_vars["dice_results"]=(100-main_vars["blue_location"]);
+					}
 
                     //change location of blue_object if it was -1
 					if(main_vars["blue_location"]==-1)
@@ -536,15 +413,7 @@
 			
 			    function move_computer(main_vars, red_piece_object, ladders, snakes)
 				{
-					//add wait?
-					/*
-					var start=new Date().getTime();
-					var curr=new Date().getTime();
-					while((curr-start)<10000)
-					{
-						curr=new Date().getTime();
-					}*/
-				
+					
 					$("#in_function").html("move_computer");
 					
 					//slide down
@@ -556,32 +425,47 @@
 					main_vars["computer_location"]=main_vars["computer_location"]+main_vars["dice_results"];
 					end_location=main_vars["computer_location"];
 					
+					if(main_vars["dice_results"]>=(100-main_vars["computer_location"]))
+					{
+						end_location=100;
+					}
+					
 					$("#in_function").html("move_computer");
 					$("#computer").html("computer: "+end_location);
 					
 					//..alert("id_"+end_location+": "+$("#id_"+end_location).offset().top+" "+$("#id_"+end_location).offset().left);
-							
-					var blue_top=($("#red-piece").offset().top-$("#checkers").offset().top);
-					var blue_left=($("#red-piece").offset().left-$("#checkers").offset().left);
-					var new_loc_top=$("#id_"+end_location).offset().top-$("#checkers").offset().top;
-					var new_loc_left=$("#id_"+end_location).offset().left-$("#checkers").offset().left;
 					
-					var differce_left=new_loc_left-blue_left;
-					var differce_top=new_loc_top-blue_top;
-					//alert("id_"+end_location+": "+blue_top+" "+blue_left+" "+new_loc_top+" "+new_loc_left);
-					//alert("id_"+end_location+": "+differce_top+" "+differce_left);
-					
-					$("#red-piece").animate({
-						 left:'+='+differce_left+'px',
-						 top:'+='+differce_top+'px'
-					 }, "slow");
+
 					 
-					 var on_box=("id_"+main_vars["dice_results"]);
 					 red_piece_object.left=($("#red-piece").offset().left-$("#checkers").offset().left);
 					 red_piece_object.top=($("#red-piece").offset().top-$("#checkers").offset().top);
-					 check_for_ladders_snakes(on_box,red_piece_object, ladders, snakes, main_vars, "$red-piece", "red_location");
+					 red_piece_object.width=$("#red-piece").width();
+					 $("#computer").html("computer: "+" X:"+red_piece_object.left+" Y:"+red_piece_object.top);
+					 var found_ladder=-1;
+					 found_ladder=check_for_ladders_snakes(("id_"+end_location),red_piece_object, ladders, snakes, main_vars, "#red-piece", "computer_location");
 					 
+					 if(found_ladder==-1)
+					 {
+						 var blue_top=($("#red-piece").offset().top-$("#checkers").offset().top);
+						 var blue_left=($("#red-piece").offset().left-$("#checkers").offset().left);
+						 var new_loc_top=$("#id_"+end_location).offset().top-$("#checkers").offset().top;
+						 var new_loc_left=$("#id_"+end_location).offset().left-$("#checkers").offset().left;
+						 
+						 var differce_left=new_loc_left-blue_left;
+						 var differce_top=new_loc_top-blue_top;
+						 //alert("id_"+end_location+": "+blue_top+" "+blue_left+" "+new_loc_top+" "+new_loc_left);
+						 //alert("id_"+end_location+": "+differce_top+" "+differce_left);
+						 
+						 $("#red-piece").animate({
+							 left:'+='+differce_left+'px',
+							 top:'+='+differce_top+'px'
+						 },"slow");
+					 }
+					 
+					 found_winner(main_vars);
 					 main_vars["whos_turn"]=1;
+					 main_vars["dice_rolled"]=0;
+					 $("#turn").html("Computer moved to "+end_location+" "+main_vars["blue_turn_text"]);
 				}
 			
 			
@@ -590,6 +474,28 @@
 					blue_piece_object.left=($blue_piece.offset().left-$("#checkers").offset().left);
 					blue_piece_object.top=($blue_piece.offset().top-$("#checkers").offset().top);
 					blue_piece_object.width=$blue_piece.width();
+				}
+			
+			    function found_winner(main_vars)
+				{
+					var found=0;
+					if(main_vars["blue_location"]==100)
+					{
+						alert("The winner is the blue player!");
+						main_vars["whos_turn"]=-1;
+						main_vars["allow_move"]=-1;
+						found=1;
+					}
+					
+					else if(main_vars["computer_location"]==100)
+					{
+						alert("The winner is the computer!");
+						main_vars["whos_turn"]=-1;
+						main_vars["allow_move"]=-1;
+						found=1;
+					}
+					
+					return found;
 				}
 
             </script>
