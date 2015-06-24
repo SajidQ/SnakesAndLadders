@@ -15,11 +15,12 @@
 
     <body>
 
+        <!-- Setup up the divs for the visuals -->
         <div id="game_body">
             
             <div id="checkers">
                 
-                <div id="snake_and_ladder"><img src="images/snake_ladder1.png" height="490" ></div>
+                <div id="snake_and_ladder"><img src="images/snake_ladder1.png" height="450" ></div>
                 <div id="snake1"><img src="images/snake1.png" height="160" ></div>
                 <div id="snake2"><img src="images/snake2.png" height="70" ></div>
 				<div id="snake3"><img src="images/snake3.png" height="200" ></div>
@@ -41,28 +42,33 @@
 				<div id="turn">It's your turn. Click to roll the dice!</div>
 				<div id="snake_ladder"></div>
             </div>
-            
+			
+			
+			
+			<!-- The dynamics of the game board and pieces occur here. -->
             <script>
                 
                 $(document).ready(function(){
-								  
-					 //GAME VARIABLES ///////////////////////////
-                      var blue_piece_object = {
+					 ////////////////////////////////////////////
+					 //Game Variables ///////////////////////////
+                      var blue_piece_object =
+					  {
                           top: null,
                           left:null,
 						  width:null
 					  }
 								  
-					  var red_piece_object = {
+					  var red_piece_object =
+					  {
 						  top: null,
 						  left:null,
 						  width:null
 					  }
 								  
-					  var snakes=[{start:'id_98',end:80}, {start:'id_82', end:19}, {start:'id_17', end:12}, {start:'id_77', end:47}];
-					  var ladders=[{start:'id_7',end:30}, {start:'id_50', end:69}, {start:'id_22', end:87}, {start:'id_74', end:93}, {start:'id_31', end:41}];
+					  var snakes=[{start:'id_98',end:80}, {start:'id_82', end:28}, {start:'id_17', end:12}, {start:'id_77', end:47}];
+					  var ladders=[{start:'id_7',end:30}, {start:'id_50', end:69}, {start:'id_32', end:87}, {start:'id_74', end:93}, {start:'id_31', end:41}];
 						
-						
+					  //object used to store all of the important variables; often passed between functions
 					  var main_vars=[];
 					  main_vars["game_started"]=0;
 					  main_vars["whos_turn"]=1; //1=player's turn, 0=computer's turn
@@ -70,19 +76,22 @@
 					  main_vars["computer_turn_text"]="It's the computer's turn";
 					  main_vars["computer_location"]=-1;
 					  main_vars["blue_location"]=-1;
-					  main_vars["dice_results"]=0;
-					  main_vars["allow_move"]=0;
+					  main_vars["dice_results"]=0; //saves the results of the
+					  main_vars["allow_move"]=0; //controls when the player can move his piece
 					  main_vars["dice_rolled"]=0;
 								  
-					  //set up background
+						
+								  
+					  //Setup the checkered board
                       make_background();
 					  
 					 
-						
-					  ////////////////////////////////////////
+								  
+					  ///////////////////////////////////////////////////
 					  // Mouse effects ///////////////////////////////
 					  var $blue_piece = null;
 					  
+					  //user moving the mouse
 					  $(document.body).on("mousemove", function(e) {
 						  $("#in_function").html("mousemove");
 										  
@@ -103,6 +112,7 @@
 						  
 					  });
 					  
+					 //user clicking on the blue-piece
 					  $(document.body).on("mousedown", "#blue-piece", function (e) {
 										  
 						  $("#in_function").html("mousedown");
@@ -127,18 +137,19 @@
 							
 					  });
 					  
+					  //user letting go of blue-piece
 					  $(document.body).on("mouseup", function (e) {
 						  $("#in_function").html("mouseup");
 							
 							
 						  if(main_vars["allow_move"]==1)
 						  {
-							 
+							  //update the location of the blue-piece
 							  update_blue_location($blue_piece, blue_piece_object);
 									
+							  //find the blue-piece and determine if it's on a snake/ladder
 							  var on_box=find_box(blue_piece_object);
 										
-							
 							  var found_ladder=-1;
 							  if(on_box==("id_"+main_vars["blue_location"]))
 							  {
@@ -148,6 +159,7 @@
 							  else
 								 alert("Move to your correct spot: " + "id_"+main_vars["blue_location"]);
 						  
+							  //if there was a snake or ladder; update the variables
 							  if(found_ladder!==-1)
 							  {
 								  //update_blue_location($blue_piece, blue_piece_object);
@@ -158,6 +170,8 @@
 							  else
 								  found_ladder=on_box;
 							  
+							  //check if user has placed the blue-piece in it's correct location;
+							  //if so; transfer the turn to the computer
 							  if(found_ladder==("id_"+main_vars["blue_location"]))
 							  {
 								 $blue_piece = null;
@@ -166,13 +180,23 @@
 								 $("#on_box").html("Box: "+on_box+ " on location!");
 								 
 								 var winner=found_winner(main_vars);
-								 if(winner==0)
+								 
+								 //transfer turn if winner has not been found or user rolled a 6
+								 if(winner==0 && main_vars["dice_results"]!==6)
 								 {
-								 //change turns
-								 main_vars["allow_move"]=0;
-							     main_vars["whos_turn"]=0;
-								 $("#turn").html("It's the computer's turn.");
-								 computers_turn(main_vars, red_piece_object, ladders, snakes);
+									 //change variables to show it's the computer's turn;
+									 main_vars["allow_move"]=0;
+									 main_vars["whos_turn"]=0;
+									 $("#turn").html("It's the computer's turn.");
+										  
+									 //call computers_turn to start the computer's turn
+									 computers_turn(main_vars, red_piece_object, ladders, snakes);
+								 }
+								
+								 else if(winner==0 && main_vars["dice_results"]==6)
+								 {
+									main_vars["dice_rolled"]=0;
+									$("#turn").html("You got a 6! You get to roll again!");
 								 }
 								 
 							  }
@@ -346,7 +370,6 @@
 					    $("#in_function").html("dice_roll");
 						$("#snake_ladder").html("");
 						
-						
 					
 						j=Math.floor(Math.random()*6)+1;
 						var time_out;
@@ -380,7 +403,6 @@
 			
 				function blue_pieces_turn(main_vars)
 				{
-					
 					//update turn sign
 					$("#turn").html("Move your piece "+main_vars["dice_results"]+" spots.");
 					
@@ -428,14 +450,12 @@
 					if(main_vars["dice_results"]>=(100-main_vars["computer_location"]))
 					{
 						end_location=100;
+						main_vars["computer_location"]=100;
 					}
 					
 					$("#in_function").html("move_computer");
 					$("#computer").html("computer: "+end_location);
 					
-					//..alert("id_"+end_location+": "+$("#id_"+end_location).offset().top+" "+$("#id_"+end_location).offset().left);
-					
-
 					 
 					 red_piece_object.left=($("#red-piece").offset().left-$("#checkers").offset().left);
 					 red_piece_object.top=($("#red-piece").offset().top-$("#checkers").offset().top);
@@ -463,9 +483,18 @@
 					 }
 					 
 					 found_winner(main_vars);
-					 main_vars["whos_turn"]=1;
-					 main_vars["dice_rolled"]=0;
-					 $("#turn").html("Computer moved to "+end_location+" "+main_vars["blue_turn_text"]);
+					 
+					 if(main_vars["dice_results"]!==6)
+					 {
+						 main_vars["whos_turn"]=1;
+						 main_vars["dice_rolled"]=0;
+						 $("#turn").html("Computer moved to "+end_location+". "+main_vars["blue_turn_text"]);
+					 }
+					 else
+					 {
+						 $("#turn").html("Computer rolled a 6! It gets to roll again!");
+						 dice_roll(main_vars, red_piece_object, ladders, snakes);
+					 }
 				}
 			
 			
@@ -478,6 +507,9 @@
 			
 			    function found_winner(main_vars)
 				{
+					$("#in_function").html("found_winner");
+					$("#computer").html("computer: "+main_vars["computer_location"]);
+					
 					var found=0;
 					if(main_vars["blue_location"]==100)
 					{
